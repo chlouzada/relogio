@@ -4,25 +4,27 @@ Desenho desenho;
 void setup (){
   size(800, 800);
   
-  // Ponteiro: N Tamanho RGB Peso Offset
-  ponteiroSegundo = new Ponteiro(60,100,0, 51, 102,3,10);
-  ponteiroMinuto = new Ponteiro(60,100,0,0,0,5,5);
-  ponteiroHora = new Ponteiro(12,50,0,0,0,6,0);
+  // Ponteiro: Tamanho, Largura, Offset, Cor
+  ponteiroSegundo = new Ponteiro(100,3,10,color(255,100,100));
+  ponteiroMinuto = new Ponteiro(100,5,5,color(0,0,0));
+  ponteiroHora = new Ponteiro(50,6,0,color(0,0,0));
 
   desenho = new Desenho();
 }
 
-void draw() {
+void draw() { 
   background(200);
   translate(400, 400);
   
-  
   desenho.update();
   
-  ponteiroSegundo.update(second());
-  ponteiroMinuto.update(minute());
-  ponteiroHora.update(hour() % 12);
-
+  float a1,a2,a3;
+  a1 = map(second(), 0, 60, 0, 360);
+  a2 = map(minute() + norm(second(), 0, 60), 0, 60, 0, 360);
+  a3 = map(hour() + norm(minute(), 0, 60), 0, 24, 0, 720);
+  ponteiroSegundo.update(a1);
+  ponteiroMinuto.update(a2);
+  ponteiroHora.update(a3);
 
   // borda
   noFill();
@@ -37,32 +39,24 @@ void draw() {
 }
 
 class Ponteiro {
-  int n;
   int tamanho;
-  int red, green, blue;
+  int largura;
   int offset;
-  int weigth;
+  color cor;
 
-  float rad;
-
-  Ponteiro(int x,int t, int r, int g, int b, int w, int os) { 
-    n = x;
+  Ponteiro(int t, int l, int os, color c) { 
     tamanho = t;
-    red = r;
-    green = g;
-    blue = b;
-    weigth = w;
+    largura = l;
     offset = - os;
+    cor = c;
   }
 
-  void update(int valor) {
-    rad = radians(map(valor, 0, n, 0, 360));
-
+  void update(float angulo) {
     push();
     rotate(radians(-90));
-    rotate(rad);
-    strokeWeight(weigth);
-    stroke(red, green, blue);
+    rotate(radians(angulo));
+    strokeWeight(largura);
+    stroke(cor);
     line(offset, 0, tamanho, 0);
     pop();
   }
