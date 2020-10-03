@@ -1,13 +1,15 @@
 Ponteiro ponteiroSegundo,ponteiroMinuto,ponteiroHora;
 Desenho desenho;
+Corpo corpo;
 
 void setup (){
   size(800, 800);
   
-  // Ponteiro: Tamanho, Largura, Offset, Cor
-  ponteiroSegundo = new Ponteiro(100,3,10,color(255,100,100));
+  // Ponteiro: Tamanho, Largura, Offset, Cor  
+  ponteiroSegundo = new Ponteiro(100,1.5,10,color(255,0,0));
   ponteiroMinuto = new Ponteiro(100,5,5,color(0,0,0));
   ponteiroHora = new Ponteiro(50,6,0,color(0,0,0));
+  corpo = new Corpo();
 
   desenho = new Desenho();
 }
@@ -15,36 +17,31 @@ void setup (){
 void draw() { 
   background(200);
   translate(400, 400);
-  
+  noFill();
+
   desenho.update();
+
+  corpo.update();
   
   float a1,a2,a3;
-  a1 = map(second(), 0, 60, 0, 360);
-  a2 = map(minute() + norm(second(), 0, 60), 0, 60, 0, 360);
-  a3 = map(hour() + norm(minute(), 0, 60), 0, 24, 0, 720);
+  a1 = map(second(), 0, 60, 0, 360) - 90;
+  a2 = map(minute() + norm(second(), 0, 60), 0, 60, 0, 360) - 90;
+  a3 = map(hour() + norm(minute(), 0, 60), 0, 24, 0, 720) - 90;
   ponteiroSegundo.update(a1);
   ponteiroMinuto.update(a2);
   ponteiroHora.update(a3);
 
   // borda
-  noFill();
-  stroke(0,0,0);
-  strokeWeight(3);
-  circle(0,0,210);
-  strokeWeight(1);
-  circle(0,0,230);
-  strokeWeight(10);
-  stroke(200,100,5);
-  arc(0, 0, 220, 220, 0, 360);
+  
 }
 
 class Ponteiro {
-  int tamanho;
-  int largura;
-  int offset;
+  float tamanho;
+  float largura;
+  float offset;
   color cor;
 
-  Ponteiro(int t, int l, int os, color c) { 
+  Ponteiro(float t, float l, float os, color c) { 
     tamanho = t;
     largura = l;
     offset = - os;
@@ -53,7 +50,6 @@ class Ponteiro {
 
   void update(float angulo) {
     push();
-    rotate(radians(-90));
     rotate(radians(angulo));
     strokeWeight(largura);
     stroke(cor);
@@ -67,13 +63,12 @@ class Desenho {
 
   void update(){
     push();
-    int t = 10;
     for (int i = 0; i < n; i++) {
-      strokeWeight(2);
+      strokeWeight(2.3);
       stroke(100, 100, 100);
 
-      // altera traço grande e médio
-      line(0, (i % 2 == 0) ? 80 : 90 , 0, 100);
+      // alterna traço grande e médio
+      line(0, (i % 2 == 0) ? 75 : 85 , 0, 100);
 
       // traço minutos
       for (int j = 0; j < 4; j++) {
@@ -84,4 +79,37 @@ class Desenho {
     }
     pop();
   }
+}
+
+class Corpo {
+  int raio = 220;
+  int largura = 10;
+
+  void update(){
+    // pino
+    push();
+    translate((raio+largura)/2,0);
+    stroke(0,0,0);
+    strokeWeight(4);
+    line(0,0,1,0);
+    translate(7,5);
+    strokeWeight(10);
+    line(0,0,0,-10);
+    pop();
+
+    // borda exterior
+    stroke(0,0,0);
+    strokeWeight(1);
+    circle(0,0,raio + largura);
+    // borda interior
+    stroke(0,0,0);
+    strokeWeight(3);
+    circle(0,0,raio - largura);
+    // preenchimento
+    stroke(200,100,5);
+    strokeWeight(10);
+    arc(0, 0, raio, raio, 0, 360);
+  }
+
+
 }
