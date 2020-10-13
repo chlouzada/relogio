@@ -2,16 +2,18 @@ Ponteiro ponteiroSegundo,ponteiroMinuto,ponteiroHora;
 Desenho desenho;
 Corpo corpo;
 
+int timer;
+
 void setup (){
   size(800, 800);
   
-  // Ponteiro: Tamanho, Largura, Offset, Cor  
-  ponteiroSegundo = new Ponteiro(100,1.5,10,color(255,0,0));
-  ponteiroMinuto = new Ponteiro(100,5,5,color(0,0,0));
-  ponteiroHora = new Ponteiro(50,6,0,color(0,0,0));
   corpo = new Corpo();
-
   desenho = new Desenho();
+
+  // Ponteiro: Tipo Tamanho, Largura, Offset, Cor  
+  ponteiroHora = new Ponteiro('h',50,6,0,color(0,0,0));
+  ponteiroMinuto = new Ponteiro('m',100,5,5,color(0,0,0));
+  ponteiroSegundo = new Ponteiro('s',100,1.5,10,color(255,0,0));
 }
 
 void draw() { 
@@ -23,38 +25,72 @@ void draw() {
 
   corpo.update();
   
-  float a1,a2,a3;
-  a1 = map(second(), 0, 60, 0, 360) - 90;
-  a2 = map(minute() + norm(second(), 0, 60), 0, 60, 0, 360) - 90;
-  a3 = map(hour() + norm(minute(), 0, 60), 0, 24, 0, 720) - 90;
-  ponteiroSegundo.update(a1);
-  ponteiroMinuto.update(a2);
-  ponteiroHora.update(a3);
-
-  // borda
-  
+  ponteiroHora.update();
+  ponteiroMinuto.update();
+  ponteiroSegundo.update();
 }
 
 class Ponteiro {
+  char tipo;
   float tamanho;
   float largura;
   float offset;
   color cor;
 
-  Ponteiro(float t, float l, float os, color c) { 
+  float timer;
+  float timerAnterior;
+  float anguloAnterior = 0;
+  float atraso = 0;
+  float atraso2 = 0;
+  float rad, radAnterior;
+
+  Ponteiro(char s,float t, float l, float os, color c) { 
+    tipo = s;
     tamanho = t;
     largura = l;
     offset = - os;
     cor = c;
   }
 
-  void update(float angulo) {
-    push();
-    rotate(radians(angulo));
-    strokeWeight(largura);
-    stroke(cor);
-    line(offset, 0, tamanho, 0);
-    pop();
+  void update() {
+    float angulo = getAngulo();
+
+    if (corpo.coroa == false) { 
+      push();
+      rad = radians(angulo);
+      rotate(rad);
+      strokeWeight(largura);
+      stroke(cor);
+      line(offset, 0, tamanho, 0);
+      pop();
+    } else { // ajuste tempo ativado
+      // conta segundos parados
+      if(timer != timerAnterior) {
+        atraso++;
+      }
+      push();
+      rotate(rad);
+      strokeWeight(largura);
+      stroke(cor);
+      line(offset, 0, tamanho, 0);
+      pop();
+    }
+    timerAnterior = timer;
+  }
+
+  float getAngulo(){
+    float angulo;
+    if (tipo == 's') {
+      timer = second();
+      angulo = map(timer, 0, 60, 0, 360) - 90 - map(atraso, 0, 60, 0, 360);
+    } else if (tipo == 'm') {
+      timer = minute();
+      angulo = map(timer + norm(second(), 0, 60), 0, 60, 0, 360) - 90;
+    } else {
+      timer = hour();
+      angulo = map(timer + norm(minute(), 0, 60), 0, 24, 0, 720) - 90;
+    }
+    return angulo;
   }
 }
 
@@ -85,16 +121,28 @@ class Corpo {
   int raio = 220;
   int largura = 10;
 
+  boolean coroa = false;
+
+  void coroaToggle(){
+    coroa = !coroa;
+  }
+
   void update(){
     // pino
     push();
     translate((raio+largura)/2,0);
     stroke(0,0,0);
     strokeWeight(4);
-    line(0,0,1,0);
-    translate(7,5);
-    strokeWeight(10);
-    line(0,0,0,-10);
+    line(0,0,5,0);
+    if (coroa == false) {
+      translate(6,5);
+      strokeWeight(10);
+      line(0,0,0,-10);
+    } else {
+      translate(10,5);
+      strokeWeight(10);
+      line(0,0,0,-10);
+    }
     pop();
 
     // borda exterior
@@ -110,6 +158,14 @@ class Corpo {
     strokeWeight(10);
     arc(0, 0, raio, raio, 0, 360);
   }
+}
 
+void mouseClicked() {
+  int x = mouseX;
+  int y = mouseY;
 
+  int coroaX , coroaY;
+  int coroaLargura = 1, coroaAltura;
+
+  corpo.coroaToggle();
 }
