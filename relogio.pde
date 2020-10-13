@@ -2,11 +2,20 @@ Ponteiro ponteiroSegundo,ponteiroMinuto,ponteiroHora;
 Desenho desenho;
 Corpo corpo;
 
-int timer;
+PVector mouseStart;
+PVector mouseEnd;
+boolean mouseP = false;
+
+int segAtrasado = 0;
+int minAtrasado = 0;
+int hrAtrasado = 0;
 
 void setup (){
   size(800, 800);
   
+  mouseStart = new PVector(0, 0);
+  mouseEnd = new PVector(0, 0);
+
   corpo = new Corpo();
   desenho = new Desenho();
 
@@ -41,8 +50,7 @@ class Ponteiro {
   float timerAnterior;
   float anguloAnterior = 0;
   float atraso = 0;
-  float atraso2 = 0;
-  float rad, radAnterior;
+  float rad;
 
   Ponteiro(char s,float t, float l, float os, color c) { 
     tipo = s;
@@ -64,9 +72,10 @@ class Ponteiro {
       line(offset, 0, tamanho, 0);
       pop();
     } else { // ajuste tempo ativado
-      // conta segundos parados
+      // conta tempo parado
       if(timer != timerAnterior) {
         atraso++;
+        setAtraso();
       }
       push();
       rotate(rad);
@@ -85,12 +94,32 @@ class Ponteiro {
       angulo = map(timer, 0, 60, 0, 360) - 90 - map(atraso, 0, 60, 0, 360);
     } else if (tipo == 'm') {
       timer = minute();
-      angulo = map(timer + norm(second(), 0, 60), 0, 60, 0, 360) - 90;
+      angulo = map(timer + norm(second() - segAtrasado, 0, 60), 0, 60, 0, 360) - 90;
     } else {
       timer = hour();
-      angulo = map(timer + norm(minute(), 0, 60), 0, 24, 0, 720) - 90;
+      angulo = map(timer + norm(minute() - minAtrasado, 0, 60), 0, 24, 0, 720) - 90;
     }
     return angulo;
+  }
+
+  void setAtraso(){
+    if (tipo == 's') {
+      segAtrasado++;
+    } else if (tipo == 'm') {
+      minAtrasado++;
+    } else {
+      hrAtrasado++;
+    }
+  }
+
+  void setTick(int x) {
+    if (x > 0) {
+      rad += radians(map(1, 0, 60, 0, 360));
+      atraso--;
+    } else {
+      rad -= radians(map(1, 0, 60, 0, 360));
+      atraso++;
+    }
   }
 }
 
@@ -157,15 +186,45 @@ class Corpo {
     stroke(200,100,5);
     strokeWeight(10);
     arc(0, 0, raio, raio, 0, 360);
+
+    int x = mouseX;
+    int y = mouseY;
+    int coroaX = 516, coroaY = 405;
+    int coroaLargura = 10, coroaAltura = 10;
   }
+
+  
 }
 
 void mouseClicked() {
-  int x = mouseX;
-  int y = mouseY;
-
-  int coroaX , coroaY;
-  int coroaLargura = 1, coroaAltura;
-
   corpo.coroaToggle();
+}
+
+void mousePressed() {
+  mouseStart.set(mouseX, mouseY);
+  mouseEnd.set(mouseX, mouseY);
+  mouseP = true;
+}
+
+void mouseReleased() {
+  mouseP = false;
+}
+
+void mouseDragged() {
+  float sensibilidade = 30;
+
+  if (corpo.coroa == true) {
+    mouseEnd.set(mouseX, mouseY);
+    if (mouseStart.y - mouseEnd.y > sensibilidade) {
+      println("up");
+      ponteiroSegundo.setTick(-1);
+      mouseStart.set(mouseX, mouseY);
+    }
+    if (mouseStart.y + sensibilidade < mouseEnd.y) {
+      println("down");
+      ponteiroSegundo.setTick(+1);
+      mouseStart.set(mouseX, mouseY);
+    }
+  }
+  // println(segAtrasado + (mouseStart));
 }
