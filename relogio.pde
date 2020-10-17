@@ -4,7 +4,7 @@ int sensibilidade = 20;
 // Corpo do Relogio
 int raioCorpo = 220;
 int larguraCorpo = 15;
-color corBorda = color(5,100,5);
+color corBorda = color(64,32,32);
 color corCentro = color(255,255,255);
 
 // Ponteiro Hora
@@ -48,17 +48,13 @@ float atrasoMin;
 float anguloHr;
 float anguloMin;
 float anguloSeg;
+
 float radHr;
 float radMin;
 float radSeg;
 
-// ???
-float minAjuste;
-float radHrAux;
-
 // int xAux = 0;
 // int yAux = 0;
-
 // if (keyPressed && key=='1'){  
 //     xAux = mouseX - width/2;
 //     yAux = mouseY - height/2;
@@ -85,15 +81,14 @@ void setup (){
   anguloHr = 0;
   anguloMin = 0;
   anguloSeg = 0;
-
-  minAjuste = 0;
-  radHrAux = 0; 
 }
 
 void draw() { 
   background(150);
   translate(400, 400);
   noFill();
+
+  perspectiva();
 
   // ================ // 
   // Corpo do Relogio // 
@@ -114,7 +109,6 @@ void draw() {
     line(0,0,0,-10);
   }
   pop();
-
   // // Estrutura Coroa
   push();
   translate((raioCorpo+larguraCorpo)/2,0);
@@ -122,52 +116,41 @@ void draw() {
   triangle(-12, -50, -10, -12, 10, -12);
   triangle(-12, 50, 10, 12, -10, 12);
   pop();
-
   // // Estrutura Pulseira
   push();
   translate(0,(raioCorpo+larguraCorpo)/2);
   fill(corBorda);
   beginShape();
     vertex(40, -40);
-    vertex(55, -20);
+    vertex(65, -20);
     vertex(50, 20);
     vertex(33, 22);
   endShape(CLOSE);
   beginShape();
-    vertex(-55, -20);
+    vertex(-65, -20);
     vertex(-40, -40);
     vertex(-33, 22);
     vertex(-50, 20);
   endShape(CLOSE);
   pop();
-
   push();
   translate(0,-(raioCorpo+larguraCorpo)/2);
   fill(corBorda);
   beginShape();
     vertex(33, -22);
     vertex(50, -20);
-    vertex(55, 20);
+    vertex(65, 20);
     vertex(40,40);
   endShape(CLOSE);
   beginShape();
     vertex(-50, -20);
     vertex(-33, -22);
     vertex(-40,40);
-    vertex(-55, 20);
+    vertex(-65, 20);
   endShape(CLOSE);
-  
-  
   pop();
-  
-  
-
-  
-
-
-
-  // Centro
-  // Preenchimento
+  // // Centro
+  // // Preenchimento
   push();
   noStroke();
   fill(corBorda);
@@ -175,7 +158,7 @@ void draw() {
   fill(corCentro);
   circle(0,0,raioCorpo-larguraCorpo);
   pop();
-  // Borda Exterior
+  // // Borda Exterior
   push();
   stroke(0,0,0);
   strokeWeight(1);
@@ -187,21 +170,6 @@ void draw() {
   strokeWeight(3);
   circle(0,0,raioCorpo - larguraCorpo);
   pop();
-
-  // // Pulseira
-  // push();
-  // translate(-100,-120);
-  // fill(0,0,0);
-  // beginShape();
-  // vertex(80, 60);
-  // quadraticVertex(80, 60, 80, 30);
-  // bezierVertex(60, 30, 40, 50, 20, 60);
-  // endShape(CLOSE);
-  // pop();
-
-  
-
-
 
   // ==================== //
   // Marcações do Relogio //
@@ -247,7 +215,7 @@ void draw() {
   // =============== //
   // Ponteiro Minuto //
   // =============== //
-  anguloMin = map(minute() + norm(second(), 0, 60), 0, 60, 0, 360) - map(atrasoMin, 0, 60, 0, 360) - 90;
+  anguloMin = map(minute() + norm(second() - atrasoSeg, 0, 60) - atrasoMin, 0, 60, 0, 360) - 90;
   if (ajusteCoroa == false) { 
     radMin = radians(anguloMin);
   } else { // Ajuste Ativado
@@ -287,6 +255,83 @@ void updatePonteiro(float rad, float tam,float larg, float offset, color cor) {
   pop();
 }
 
+void perspectiva() {
+  int offset = 7;
+
+  
+
+  push();
+  translate(-offset,offset);
+  fill(corBorda);
+  circle(0,0,raioCorpo+larguraCorpo);
+  pop();
+
+
+
+  push();
+  translate(0,(raioCorpo+larguraCorpo)/2);
+  fill(corBorda);
+  translate(-offset,offset);
+  beginShape();
+    vertex(40, -40);
+    vertex(65, -20);
+    vertex(50, 20);
+    vertex(33, 22);
+  endShape(CLOSE);
+  beginShape();
+    vertex(-65, -20);
+    vertex(-40, -40);
+    vertex(-33, 22);
+    vertex(-50, 20);
+  endShape(CLOSE);
+  pop();
+  push();
+  translate(0,-(raioCorpo+larguraCorpo)/2);
+  fill(corBorda);
+  beginShape();
+    vertex(33 - offset, -22 + offset);
+    vertex(50 - offset, -20 + offset);
+    vertex(65 - offset, 20 + offset);
+    vertex(40 - offset,40 + offset);
+  endShape(CLOSE);
+  beginShape();
+    vertex(-50, -20);
+    vertex(-33, -22);
+    vertex(-40,40);
+    vertex(-65, 20);
+  endShape(CLOSE);
+  pop();
+
+  // linhas contorno
+  
+
+  push();
+  // // // Aux Mouse Pos
+  int xAux = 0;
+  int yAux = 0;
+  if (keyPressed && key=='1'){  
+      xAux = mouseX - width/2;
+      yAux = mouseY - height/2;
+  }
+  
+  // // // End Mouse Pos
+
+  fill(corBorda);
+  noStroke();
+  quad(-39, 146, -33, 140, -50, 136, -57, 144);
+  stroke(1);
+  line(-39, 146, -33, 140);
+  line(-50, 136, -57, 144);
+  pop();
+
+  push();
+  translate(-200,-200);
+  text(xAux, 0,0);
+  translate(0,50);
+  text(yAux, 0,0);
+  pop();
+}
+
 void mouseClicked() {
   if (mouseButton == LEFT)
     ajusteCoroa = !ajusteCoroa;
@@ -305,21 +350,20 @@ void mouseReleased() {
 }
 
 void mouseDragged() {
-  if (ajusteCoroa == true) {
+  if (ajusteCoroa == true && mouseP) {
     mouseEnd.set(mouseX, mouseY);
     if (mouseStart.y - mouseEnd.y > sensibilidade) {
       mouseStart.set(mouseX, mouseY);
       atrasoSeg++;
       radSeg-= radians(map(1, 0, 60, 0, 360));
       
-      // // Atualiza Minuto
-      // atrasoMin += 1/60;
-      // radMin -= radians(map(norm(atrasoSeg, 0, 60), 0, 60, 0, 6));
-      // minAjuste -= map(norm(atrasoSeg, 0, 60), 0, 60, 0, 6);
-      // if (anguloSeg % 360 ==  - 84 || anguloSeg % 360 == 264){
-      //   radMin-= radians(map(1, 0, 60, 0, 360));
-      //   atrasoMin++;
-      // }
+      // // Retrocede Minuto
+      if (anguloSeg % 360 ==  - 84 || anguloSeg % 360 == 264){
+        atrasoMin++;
+        println("up");
+        println(atrasoMin);
+        radMin = radians(map(minute() - atrasoMin, 0, 60, 0, 360) - 90);
+      }
         
     }
     if (mouseStart.y + sensibilidade < mouseEnd.y) {
@@ -328,13 +372,12 @@ void mouseDragged() {
       radSeg += radians(map(1, 0, 60, 0, 360));
       
       // Atualiza Minuto
-      // atrasoMin -= 1/60;
-      // radMin += radians(map(norm(atrasoSeg, 0, 60), 0, 60, 0, 6));
-      // minAjuste += map(norm(atrasoSeg, 0, 60), 0, 60, 0, 6);
-      // if (anguloSeg % 360 ==  - 84 || anguloSeg % 360 == 264){
-      //   radMin+= radians(map(1, 0, 60, 0, 360));
-      //   atrasoMin--;
-      // }
+      if (anguloSeg % 360 ==  - 84 || anguloSeg % 360 == 264){
+        atrasoMin--;
+        println("down");
+        println(atrasoMin);
+        radMin = radians(map(minute() - atrasoMin, 0, 60, 0, 360) - 90);
+      }
     }
   }
 }
