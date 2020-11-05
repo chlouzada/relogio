@@ -90,6 +90,20 @@ void draw() {
 
   perspectiva();
 
+  // ======== // 
+  // Pulseira // 
+  // ======== //
+  // // Barra Ferro Suporte
+  push();
+  stroke(0,0,0);
+  strokeWeight(2);
+  line(-33,-130, 31,-130);
+  line(-33,132, 31,132);
+  pop();
+  // Pulseira   
+  // TODO 
+  // ...
+
   // ================ // 
   // Corpo do Relogio // 
   // ================ //
@@ -256,7 +270,7 @@ void updatePonteiro(float rad, float tam,float larg, float offset, color cor) {
 }
 
 void perspectiva() {
-  int offset = 7;
+  int offset = 5;
 
   
 
@@ -302,33 +316,32 @@ void perspectiva() {
   endShape(CLOSE);
   pop();
 
-  // linhas contorno
-  
-
-  push();
-  // // // Aux Mouse Pos
+  // // // // Aux Mouse Pos
   int xAux = 0;
   int yAux = 0;
   if (keyPressed && key=='1'){  
       xAux = mouseX - width/2;
       yAux = mouseY - height/2;
   }
-  
-  // // // End Mouse Pos
-
-  fill(corBorda);
-  noStroke();
-  quad(-39, 146, -33, 140, -50, 136, -57, 144);
-  stroke(1);
-  line(-39, 146, -33, 140);
-  line(-50, 136, -57, 144);
-  pop();
-
   push();
   translate(-200,-200);
   text(xAux, 0,0);
   translate(0,50);
   text(yAux, 0,0);
+  pop();
+  // // // // End Mouse Pos
+
+
+  push();
+  fill(corBorda);
+  noStroke();
+  stroke(1);
+  fill(corBorda);
+  quad(-38, 144, -33, 139, -50, 135, -55, 142);
+  quad(50,136,33, 138, 28, 144, 45, 142);
+  quad(33,-139,36, -111, 30, -114, 28, -134);
+  // line(-39, 146, -33, 140);
+  // line(-50, 136, -57, 144);
   pop();
 }
 
