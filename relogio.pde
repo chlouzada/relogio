@@ -1,6 +1,10 @@
 // Ajuste Tempo
 int sensibilidade = 20;
 
+// Logo Marca
+PImage logo;
+float scaleLogo = 0.045;
+
 // Corpo do Relogio
 int raioCorpo = 220;
 int larguraCorpo = 15;
@@ -53,16 +57,20 @@ float radHr;
 float radMin;
 float radSeg;
 
-// int xAux = 0;
-// int yAux = 0;
-// if (keyPressed && key=='1'){  
-//     xAux = mouseX - width/2;
-//     yAux = mouseY - height/2;
-// }
-// translate(-200,-200);
-// text(xAux, 0,0);
-// translate(0,50);
-// text(yAux, 0,0);
+// // // // Aux Mouse Pos
+  // int xAux = 0;
+  // int yAux = 0;
+  // if (keyPressed && key=='1'){  
+  //     xAux = mouseX - width/2;
+  //     yAux = mouseY - height/2;
+  // }
+  // push();
+  // translate(-200,-200);
+  // text(xAux, 0,0);
+  // translate(0,50);
+  // text(yAux, 0,0);
+  // pop();
+  // // // // End Mouse Pos
 
 
 void setup (){
@@ -81,6 +89,8 @@ void setup (){
   anguloHr = 0;
   anguloMin = 0;
   anguloSeg = 0;
+
+  logo = loadImage("PUMA_Logo_Cat.png");
 }
 
 void draw() { 
@@ -89,21 +99,6 @@ void draw() {
   noFill();
 
   perspectiva();
-
-  // ======== // 
-  // Pulseira // 
-  // ======== //
-  // // Barra Ferro Suporte
-  push();
-  stroke(212,175,55);
-  strokeWeight(2);
-  line(-33,-130, 31,-130);
-  line(-33,127, 31,127);
-  
-  pop();
-  // Pulseira   
-  // TODO 
-  // ...
 
   // ================ // 
   // Corpo do Relogio // 
@@ -259,6 +254,16 @@ void draw() {
   }
   pop();
 
+  // ============ //
+  // Logo Relogio //
+  // ============ //
+  push();
+  translate(-scaleLogo * logo.width / 2,-80);
+  scale(scaleLogo, scaleLogo);
+  image(logo, 0, 0);
+  pop();
+
+
   // ============= //
   // Ponteiro Hora //
   // ============= //
@@ -277,13 +282,12 @@ void draw() {
   // =============== //
   // Ponteiro Minuto //
   // =============== //
-  anguloMin = map(minute() + norm(second() - atrasoSeg, 0, 60) - atrasoMin, 0, 60, 0, 360) - 90;
+  anguloMin = map(minute() + norm(second() - (atrasoSeg % 60), 0, 60) - atrasoMin, 0, 60, 0, 360) - 90;
   if (ajusteCoroa == false) { 
     radMin = radians(anguloMin);
   } else { // Ajuste Ativado
     // Conta Tempo Parado
     if(min != minAnterior) {
-      println("aaa");
       atrasoMin++;
     }
   }
@@ -364,22 +368,6 @@ void perspectiva() {
   endShape(CLOSE);
   pop();
 
-  // // // // Aux Mouse Pos
-  int xAux = 0;
-  int yAux = 0;
-  if (keyPressed && key=='1'){  
-      xAux = mouseX - width/2;
-      yAux = mouseY - height/2;
-  }
-  push();
-  translate(-200,-200);
-  text(xAux, 0,0);
-  translate(0,50);
-  text(yAux, 0,0);
-  pop();
-  // // // // End Mouse Pos
-
-
   push();
   fill(corBorda);
   noStroke();
@@ -421,8 +409,6 @@ void mouseDragged() {
       // // Retrocede Minuto
       if (anguloSeg % 360 ==  - 84 || anguloSeg % 360 == 264){
         atrasoMin++;
-        println("up");
-        println(atrasoMin);
         radMin = radians(map(minute() - atrasoMin, 0, 60, 0, 360) - 90);
       }
         
@@ -435,8 +421,6 @@ void mouseDragged() {
       // Atualiza Minuto
       if (anguloSeg % 360 ==  - 84 || anguloSeg % 360 == 264){
         atrasoMin--;
-        println("down");
-        println(atrasoMin);
         radMin = radians(map(minute() - atrasoMin, 0, 60, 0, 360) - 90);
       }
     }
