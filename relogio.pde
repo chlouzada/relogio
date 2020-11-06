@@ -57,7 +57,7 @@ float radHr;
 float radMin;
 float radSeg;
 
-// // // // Aux Mouse Pos
+  // // // // Aux Mouse Pos
   // int xAux = 0;
   // int yAux = 0;
   // if (keyPressed && key=='1'){  
@@ -126,21 +126,18 @@ void draw() {
   triangle(-12, -50, -10, -12, 10, -12);
   triangle(-12, 50, 10, 12, -10, 12);
   pop();
+
   // Estrutura Pulseira
   push();
   translate(0,(raioCorpo+larguraCorpo)/2);
   fill(corBorda);
-
   beginShape();
     vertex(-65, -20);
     vertex(65, -40);
     vertex(50, 20);
     vertex(-50, 20);
-  endShape(CLOSE);
-  //1111111111111111111111111111111
-  
+  endShape(CLOSE);  
   beginShape();
- 
     vertex(-50, 20);
     vertex(50, 20);
     vertex(47, 50);
@@ -158,7 +155,7 @@ void draw() {
     vertex(45, 110);
     vertex(-45, 110);
   endShape(CLOSE);
-  
+
   pop();
   push();
   translate(0,-(raioCorpo+larguraCorpo)/2);
@@ -188,8 +185,22 @@ void draw() {
     vertex(44, -112);
     vertex(-44,-112);
   endShape(CLOSE);
-
   pop();
+
+  // Detalhes da Pulseira
+  push();
+  stroke(212,175,55);
+  strokeWeight(3);
+  line(-50,137, 50,137);
+  line(-47,167, 47,167);
+  line(-46,197, 46,197);
+  line(-44,228, 44,228);
+  line(-50,-138, 50,-138);
+  line(-47,-168, 47,-166);
+  line(-46,-198, 46,-198);
+  line(-44,-228, 44,-228);
+  pop();
+
   // // Centro
   // // Preenchimento
   push();
@@ -210,22 +221,6 @@ void draw() {
   stroke(0,0,0);
   strokeWeight(3);
   circle(0,0,raioCorpo - larguraCorpo);
-  pop();
-    // ==================== //
-  // Detalhes da Pulseira //
-  // ==================== //
-  push();
-  stroke(212,175,55);
-  strokeWeight(3);
-  line(-50,137, 50,137);
-  line(-47,167, 47,167);
-  line(-46,197, 46,197);
-  line(-44,228, 44,228);
-  line(-50,-138, 50,-138);
-  line(-47,-168, 47,-166);
-  line(-46,-198, 46,-198);
-  
-   line(-44,-228, 44,-228);
   pop();
   
   // ==================== //
@@ -324,15 +319,11 @@ void updatePonteiro(float rad, float tam,float larg, float offset, color cor) {
 void perspectiva() {
   int offset = 5;
 
-  
-
   push();
   translate(-offset,offset);
   fill(corBorda);
   circle(0,0,raioCorpo+larguraCorpo);
   pop();
-
-
 
   push();
   translate(0,(raioCorpo+larguraCorpo)/2);
@@ -379,6 +370,83 @@ void perspectiva() {
   // line(-39, 146, -33, 140);
   // line(-50, 136, -57, 144);
   pop();
+
+  // Pulseira
+  push();
+  translate(-offset,offset);
+  translate(0,(raioCorpo+larguraCorpo)/2);
+  fill(corBorda);
+  beginShape();
+    vertex(-65, -20);
+    vertex(65, -40);
+    vertex(50, 20);
+    vertex(-50, 20);
+  endShape(CLOSE);  
+  beginShape();
+    vertex(-50, 20);
+    vertex(50, 20);
+    vertex(47, 50);
+    vertex(-47, 50);
+  endShape(CLOSE);
+  beginShape();
+    vertex(-47, 50);
+    vertex(47, 50);
+    vertex(46, 80);
+    vertex(-46, 80);
+  endShape(CLOSE);
+  beginShape();
+    vertex(-46,80);
+    vertex(46, 80);
+    vertex(45, 110);
+    vertex(-45, 110);
+  endShape(CLOSE);
+  pop();
+  push();
+  translate(-offset,offset);
+  translate(0,-(raioCorpo+larguraCorpo)/2);
+  fill(corBorda);
+  beginShape();
+    vertex(-50, -22);
+    vertex(50, -22);
+    vertex(65, 22);
+    vertex(-65,22);
+  endShape(CLOSE);
+  beginShape();
+    vertex(-50, -22);
+    vertex(50, -22);
+    vertex(48, -52);
+    vertex(-48,-52);
+  endShape(CLOSE);
+  beginShape();
+    vertex(-48, -52);
+    vertex(48, -52);
+    vertex(46, -82);
+    vertex(-46,-82);
+  endShape(CLOSE);
+  beginShape();
+    vertex(-46, -82);
+    vertex(46, -82);
+    vertex(44, -112);
+    vertex(-44,-112);
+  endShape(CLOSE);
+  pop();
+
+  // Detalhes da Pulseira
+  push();
+  stroke(212,175,55); // Cor detalhe
+  strokeWeight(3);
+  line(-50,138,-54,141);
+  line(-47,167,-52,172);
+  line(-46,197,-51,201);
+  line(-45,228,-50,230);
+  line(-50,-138,-55,-135);
+  line(-47,-168,-53,-165);
+  line(-46,-198,-51,-194);
+  line(-44,-227,-49,-224);
+  pop();
+
+ 
+
 }
 
 void mouseClicked() {
