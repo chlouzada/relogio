@@ -95,10 +95,11 @@ void draw() {
   // ======== //
   // // Barra Ferro Suporte
   push();
-  stroke(0,0,0);
+  stroke(212,175,55);
   strokeWeight(2);
   line(-33,-130, 31,-130);
-  line(-33,132, 31,132);
+  line(-33,127, 31,127);
+  
   pop();
   // Pulseira   
   // TODO 
@@ -130,38 +131,69 @@ void draw() {
   triangle(-12, -50, -10, -12, 10, -12);
   triangle(-12, 50, 10, 12, -10, 12);
   pop();
-  // // Estrutura Pulseira
+  // Estrutura Pulseira
   push();
   translate(0,(raioCorpo+larguraCorpo)/2);
   fill(corBorda);
-  beginShape();
-    vertex(40, -40);
-    vertex(65, -20);
-    vertex(50, 20);
-    vertex(33, 22);
-  endShape(CLOSE);
+
   beginShape();
     vertex(-65, -20);
-    vertex(-40, -40);
-    vertex(-33, 22);
+    vertex(65, -40);
+    vertex(50, 20);
     vertex(-50, 20);
   endShape(CLOSE);
+  //1111111111111111111111111111111
+  
+  beginShape();
+ 
+    vertex(-50, 20);
+    vertex(50, 20);
+    vertex(47, 50);
+    vertex(-47, 50);
+  endShape(CLOSE);
+  beginShape();
+    vertex(-47, 50);
+    vertex(47, 50);
+    vertex(46, 80);
+    vertex(-46, 80);
+  endShape(CLOSE);
+  beginShape();
+    vertex(-46,80);
+    vertex(46, 80);
+    vertex(45, 110);
+    vertex(-45, 110);
+  endShape(CLOSE);
+  
   pop();
   push();
   translate(0,-(raioCorpo+larguraCorpo)/2);
   fill(corBorda);
   beginShape();
-    vertex(33, -22);
-    vertex(50, -20);
-    vertex(65, 20);
-    vertex(40,40);
+    vertex(-50, -22);
+    vertex(50, -22);
+    vertex(65, 22);
+    vertex(-65,22);
+  endShape(CLOSE);
+  
+    beginShape();
+    vertex(-50, -22);
+    vertex(50, -22);
+    vertex(48, -52);
+    vertex(-48,-52);
   endShape(CLOSE);
   beginShape();
-    vertex(-50, -20);
-    vertex(-33, -22);
-    vertex(-40,40);
-    vertex(-65, 20);
+    vertex(-48, -52);
+    vertex(48, -52);
+    vertex(46, -82);
+    vertex(-46,-82);
   endShape(CLOSE);
+  beginShape();
+    vertex(-46, -82);
+    vertex(46, -82);
+    vertex(44, -112);
+    vertex(-44,-112);
+  endShape(CLOSE);
+
   pop();
   // // Centro
   // // Preenchimento
@@ -184,7 +216,23 @@ void draw() {
   strokeWeight(3);
   circle(0,0,raioCorpo - larguraCorpo);
   pop();
-
+    // ==================== //
+  // Detalhes da Pulseira //
+  // ==================== //
+  push();
+  stroke(212,175,55);
+  strokeWeight(3);
+  line(-50,137, 50,137);
+  line(-47,167, 47,167);
+  line(-46,197, 46,197);
+  line(-44,228, 44,228);
+  line(-50,-138, 50,-138);
+  line(-47,-168, 47,-166);
+  line(-46,-198, 46,-198);
+  
+   line(-44,-228, 44,-228);
+  pop();
+  
   // ==================== //
   // Marcações do Relogio //
   // ==================== //
